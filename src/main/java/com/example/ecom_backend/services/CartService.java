@@ -27,7 +27,7 @@ public class CartService {
         return cartItems;
     }
 
-    private Cart getOrCreateCart(){
+    public Cart getOrCreateCart(){
         return cartRepository
                 .findFirstByOrderByIdAsc()
                 .orElseGet(() -> cartRepository.save(new Cart()));

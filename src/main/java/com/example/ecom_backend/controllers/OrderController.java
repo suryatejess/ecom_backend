@@ -1,0 +1,57 @@
+package com.example.ecom_backend.controllers;
+
+import com.example.ecom_backend.dtos.OrderResponseDTO;
+import com.example.ecom_backend.dtos.PlaceOrderRequestDTO;
+import com.example.ecom_backend.entities.Order;
+import com.example.ecom_backend.services.OrderService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/order")
+public class OrderController {
+
+    /*
+    POST '/'
+    place order. when order is placed, cart should be cleared. available quantity of the product should decrement
+
+    PUT '/id'
+    update order status.
+    if the order status becomes cancelled, the cart quantity should increase
+
+    DELETE '/id'
+    delete order with that id
+
+    GET '/'
+    get all orders
+
+    GET '/id'
+    get order with that id
+     */
+
+    @Autowired
+    OrderService orderService;
+
+    @PostMapping("/")
+    public void placeOrder(@RequestBody PlaceOrderRequestDTO dto){ // for multiuser, the argument should be 'userId' / 'sessionId'
+        orderService.placeOrder(dto.getAddress(), dto.getReceiverName());
+    }
+
+    @GetMapping("/")
+    public List<OrderResponseDTO> getOrders(){
+        return orderService.getAllOrders();
+    }
+
+    @GetMapping("/{id}")
+    public Order getOrderById(@PathVariable int id){
+        return orderService.getOrderById(id);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteOrderById(@PathVariable int id){
+        orderService.deleteOrderById(id);
+    }
+
+}

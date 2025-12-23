@@ -30,7 +30,7 @@ public class CartController {
         // TODO: check if there are enough products. right now, we are directly updating the quantity. in the new thing, there should be something to validate that the present quantities are not exceeding the available quantity of the product
 
         Long productId = dto.getProductId();
-        Integer quantity = dto.getQuantity();
+        int quantity = dto.getQuantity();
 
         cartService.addProductToCart(productId, quantity);
     }

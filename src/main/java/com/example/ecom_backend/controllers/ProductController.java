@@ -24,6 +24,9 @@ public class ProductController {
 
     GET '/id'
     // fetch product with that id
+
+    PUT '/id'
+    // modify properties of the product with that id
      */
 
     @GetMapping("/")
@@ -49,5 +52,7 @@ public class ProductController {
 
         productService.save(product);
     }
+
+    // TODO: PUT '/id' - change properties of product with that id
 
 }
