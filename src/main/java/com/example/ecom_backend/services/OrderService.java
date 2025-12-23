@@ -68,18 +68,36 @@ public class OrderService {
         order.setReceiverName(receiverName);
         order.setOrderPlacedDate(new Date(System.currentTimeMillis()));
 
+
+
+        // decrement the product available quantity
+//        for(int i = 0; i < cart.getCartItems().size(); i++){
+//            CartItem cartItem = cart.getCartItems().get(i);
+//            Product productOfCartItem = cartItem.getProduct();
+//            int initialProductAvailableQuantity = productOfCartItem.getAvailableQuantity();
+//            int quantityOfCartItem = cartItem.getQuantity();
+//
+//            // decrement the product available quantity
+//            productOfCartItem.setAvailableQuantity(initialProductAvailableQuantity - quantityOfCartItem);
+//        }
+
+        for(CartItem cartItem : cart.getCartItems()){
+            Product  productOfCartItem = cartItem.getProduct();
+            int initialProductAvailableQuantity = productOfCartItem.getAvailableQuantity();
+            int quantityOfCartItem = cartItem.getQuantity();
+
+            // decrement the product available quantity
+            productOfCartItem.setAvailableQuantity(initialProductAvailableQuantity - quantityOfCartItem);
+
+            productRepository.save(productOfCartItem);
+        }
+
+        // clear cart
+        cartService.clearCart();
+
         orderRepository.save(order);
 
-        // TODO: clear the cart
-        // TODO: decrement the product available quantity
     }
-
-//    public List<OrderResponseDTO> getAllOrders(){
-//
-//        List<Order> allOrders = (List<Order>) orderRepository.findAll();
-//        List<OrderResponseDTO> orderResponseDTOList = new ArrayList<>();
-//
-//    }
 
     public List<OrderResponseDTO> getAllOrders() {
 

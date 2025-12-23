@@ -33,6 +33,18 @@ public class CartService {
                 .orElseGet(() -> cartRepository.save(new Cart()));
     }
 
+//    public void clearCart(){
+//        Cart cart = getOrCreateCart();
+//        cart.setCartItems(null);
+//        cartRepository.save(cart);
+//    }
+
+    public void clearCart() {
+        Cart cart = getOrCreateCart();
+        cart.getCartItems().clear();   // ✅ correct
+    }
+
+
     public void addProductToCart(Long productId, int quantity){
         Cart cart = getOrCreateCart();
 

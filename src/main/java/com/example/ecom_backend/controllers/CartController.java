@@ -23,6 +23,7 @@ public class CartController {
 
     - [ ] remove product from cart
     - [x] be able to modify the quantity of a particular product ( product ofc )
+    - [x] clear cart
      */
 
     @PostMapping("/")
@@ -33,6 +34,11 @@ public class CartController {
         int quantity = dto.getQuantity();
 
         cartService.addProductToCart(productId, quantity);
+    }
+
+    @DeleteMapping("/")
+    public void clearCart(){
+        cartService.clearCart();
     }
 
     @GetMapping("/")
