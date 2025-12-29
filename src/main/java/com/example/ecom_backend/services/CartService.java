@@ -41,9 +41,9 @@ public class CartService {
 
     public void clearCart() {
         Cart cart = getOrCreateCart();
-        cart.getCartItems().clear();   // ✅ correct
+        cart.getCartItems().clear();
+        cartRepository.save(cart);
     }
-
 
     public void addProductToCart(Long productId, int quantity){
         Cart cart = getOrCreateCart();
