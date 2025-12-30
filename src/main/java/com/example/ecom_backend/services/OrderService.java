@@ -29,7 +29,7 @@ public class OrderService {
     }
 
     @Transactional
-    public void placeOrder(String orderAddress, String receiverName){
+    public void placeOrder(String username, String orderAddress, String receiverName){
 
         /*
         get or create a cart
@@ -40,7 +40,7 @@ public class OrderService {
         save order
          */
 
-        Cart cart = cartService.getOrCreateCart();
+        Cart cart = cartService.getOrCreateCartByUsername(username);
         Order order = createOrder();
 
         List<OrderItem> orderItemsList = new ArrayList<>();

@@ -4,6 +4,8 @@ import com.example.ecom_backend.dtos.CartItemDTO;
 import com.example.ecom_backend.entities.CartItem;
 import com.example.ecom_backend.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -30,20 +32,29 @@ public class CartController {
     public void addToCart(@RequestBody CartItemDTO dto) {
         // TODO: check if there are enough products. right now, we are directly updating the quantity. in the new thing, there should be something to validate that the present quantities are not exceeding the available quantity of the product
 
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
         Long productId = dto.getProductId();
         int quantity = dto.getQuantity();
 
-        cartService.addProductToCart(productId, quantity);
+        cartService.addProductToCart(username, productId, quantity);
     }
 
     @DeleteMapping("/")
     public void clearCart(){
-        cartService.clearCart();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        cartService.clearCart(username);
     }
 
     @GetMapping("/")
     public List<CartItemDTO> getCartItems() {
-        List<CartItem> cartItems = cartService.findAllProducts();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        List<CartItem> cartItems = cartService.getCartProductsByUsername(username);
 
         List<CartItemDTO> cartItemDTOs = new ArrayList<>();
         for (CartItem cartItem : cartItems) {

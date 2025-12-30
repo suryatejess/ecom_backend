@@ -5,6 +5,8 @@ import com.example.ecom_backend.dtos.PlaceOrderRequestDTO;
 import com.example.ecom_backend.entities.Order;
 import com.example.ecom_backend.services.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,6 +38,10 @@ public class OrderController {
 
     @PostMapping("/")
     public void placeOrder(@RequestBody PlaceOrderRequestDTO dto){ // for multiuser, the argument should be 'userId' / 'sessionId'
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+
         orderService.placeOrder(dto.getAddress(), dto.getReceiverName());
     }
 
