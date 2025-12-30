@@ -1,15 +1,14 @@
-package com.example.ecom_backend.repositories;
+    package com.example.ecom_backend.repositories;
 
-import com.example.ecom_backend.entities.AppUser;
-import com.example.ecom_backend.entities.Cart;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.stereotype.Repository;
+    import com.example.ecom_backend.entities.AppUser;
+    import com.example.ecom_backend.entities.Cart;
+    import org.springframework.data.repository.CrudRepository;
+    import org.springframework.stereotype.Repository;
 
-import java.util.Optional;
+    import java.util.Optional;
 
-@Repository
-public interface CartRepository extends CrudRepository<Cart, Long> {
-    Optional<Cart> findFirstByOrderByIdAsc();
-    Optional<Cart> findByUserUsername(String username);
-    Optional<Cart> findByUser(AppUser user);
-}
+    @Repository
+    public interface CartRepository extends CrudRepository<Cart, Long> {
+        Optional<Cart> findByAppUser(AppUser appUser);
+        Optional<Cart> findByAppUserUsername(String username);
+    }

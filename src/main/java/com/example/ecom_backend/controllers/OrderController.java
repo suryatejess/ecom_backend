@@ -41,8 +41,7 @@ public class OrderController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 
-
-        orderService.placeOrder(dto.getAddress(), dto.getReceiverName());
+        orderService.placeOrder(username, dto.getAddress(), dto.getReceiverName());
     }
 
     @GetMapping("/")

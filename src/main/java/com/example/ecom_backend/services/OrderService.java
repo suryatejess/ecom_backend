@@ -93,7 +93,7 @@ public class OrderService {
         }
 
         // clear cart
-        cartService.clearCart();
+        cartService.clearCart(username);
 
         orderRepository.save(order);
 

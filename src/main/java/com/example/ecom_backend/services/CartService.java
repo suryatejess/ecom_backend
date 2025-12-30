@@ -31,7 +31,7 @@ public class CartService {
         }
 
         return cartRepository
-                .findByUser(user)
+                .findByAppUser(user)
                 .orElseGet(
                         () -> {
                             Cart cart = new Cart();
