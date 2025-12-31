@@ -72,7 +72,8 @@ public class CartService {
 
     public void clearCart(String username) {
         Cart cart = getOrCreateCartByUsername(username);
-        cart.setCartItems(null);
+//        cart.setCartItems(null);
+        cart.getCartItems().clear();
         cartRepository.save(cart);
     }
 

@@ -46,7 +46,10 @@ public class OrderController {
 
     @GetMapping("/")
     public List<OrderResponseDTO> getOrders(){
-        return orderService.getAllOrders();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        return orderService.getAllOrdersByUsername(username);
     }
 
     @GetMapping("/{id}")

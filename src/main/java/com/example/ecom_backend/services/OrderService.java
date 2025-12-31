@@ -3,6 +3,7 @@ package com.example.ecom_backend.services;
 import com.example.ecom_backend.dtos.OrderItemDTO;
 import com.example.ecom_backend.dtos.OrderResponseDTO;
 import com.example.ecom_backend.entities.*;
+import com.example.ecom_backend.repositories.CartRepository;
 import com.example.ecom_backend.repositories.OrderItemRepository;
 import com.example.ecom_backend.repositories.OrderRepository;
 import com.example.ecom_backend.repositories.ProductRepository;
@@ -23,6 +24,8 @@ public class OrderService {
     private OrderRepository orderRepository;
     @Autowired
     private CartService cartService;
+    @Autowired
+    private CartRepository cartRepository;
 
     public Order createOrder(){
         return new Order();
@@ -43,6 +46,8 @@ public class OrderService {
         Cart cart = cartService.getOrCreateCartByUsername(username);
         Order order = createOrder();
 
+        AppUser appUser = cart.getAppUser();
+
         List<OrderItem> orderItemsList = new ArrayList<>();
 
         for(int i = 0; i < cart.getCartItems().size(); i++){
@@ -61,12 +66,12 @@ public class OrderService {
             // add order item to order
             orderItemsList.add(orderItem);
         }
-
         order.setOrderItems(orderItemsList);
         order.setOrderStatus(OrderStatus.PROCESSING);
         order.setAddress(orderAddress);
         order.setReceiverName(receiverName);
         order.setOrderPlacedDate(new Date(System.currentTimeMillis()));
+        order.setAppUser(appUser);
 
 
 
@@ -99,9 +104,10 @@ public class OrderService {
 
     }
 
-    public List<OrderResponseDTO> getAllOrders() {
+    public List<OrderResponseDTO> getAllOrdersByUsername(String username) {
 
-        List<Order> orders = (List<Order>) orderRepository.findAll();
+//        List<Order> orders = (List<Order>) orderRepository.findAll();
+        List<Order> orders = (List<Order>) orderRepository.findByAppUserUsername(username);
         List<OrderResponseDTO> response = new ArrayList<>();
 
         for (Order order : orders) {
@@ -111,7 +117,6 @@ public class OrderService {
 
         return response;
     }
-
 
     public Order getOrderById(int id){
         return orderRepository.findById(id).get();

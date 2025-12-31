@@ -30,6 +30,18 @@ public class Order {
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 
+    @ManyToOne
+    @JoinColumn
+    private AppUser appUser;
+
+    public AppUser getAppUser() {
+        return appUser;
+    }
+
+    public void setAppUser(AppUser appUser) {
+        this.appUser = appUser;
+    }
+
     public OrderStatus getOrderStatus() {
         return orderStatus;
     }
