@@ -4,6 +4,8 @@ import com.example.ecom_backend.entities.AppUser;
 import com.example.ecom_backend.entities.Cart;
 import com.example.ecom_backend.entities.CartItem;
 import com.example.ecom_backend.entities.Product;
+import com.example.ecom_backend.exceptions.ProductAvailableQuantityExceededException;
+import com.example.ecom_backend.exceptions.ProductNotFoundException;
 import com.example.ecom_backend.repositories.CartItemRepository;
 import com.example.ecom_backend.repositories.CartRepository;
 import com.example.ecom_backend.repositories.ProductRepository;
@@ -51,7 +53,13 @@ public class CartService {
         Cart cart = getOrCreateCartByUsername(username);
 
         Product product = prodRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ProductNotFoundException("Product with id : " + productId + " not found"));
+
+        int availableProductQuantity = product.getAvailableQuantity();
+
+        if(availableProductQuantity < quantity){
+            throw new ProductAvailableQuantityExceededException("Product quantity exceeded. availableProductQuantity : " +  availableProductQuantity + ". requiredQuantity : " +  quantity);
+        }
 
         CartItem cartItem = cartItemRepository
                 .findByCartAndProduct(cart, product)

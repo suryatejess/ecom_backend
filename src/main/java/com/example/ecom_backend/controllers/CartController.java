@@ -30,7 +30,6 @@ public class CartController {
 
     @PostMapping("/")
     public void addToCart(@RequestBody CartItemDTO dto) {
-        // TODO: check if there are enough products. right now, we are directly updating the quantity. in the new thing, there should be something to validate that the present quantities are not exceeding the available quantity of the product
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
