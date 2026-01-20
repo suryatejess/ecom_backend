@@ -78,10 +78,57 @@ public class CartService {
         cartRepository.save(cart);
     }
 
+    public void modifyProductQuantity(String username, Long productId, int quantity) {
+
+        Cart cart = getOrCreateCartByUsername(username);
+
+        Product product = prodRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("Product with id : " + productId + " not found"));
+
+        if (quantity < 0) {
+            throw new IllegalArgumentException("Quantity cannot be negative");
+        }
+
+        if (quantity == 0) {
+            cart.getCartItems()
+                    .removeIf(ci -> ci.getProduct().getId().equals(productId));
+            cartRepository.save(cart);
+            return;
+        }
+
+        int availableProductQuantity = product.getAvailableQuantity();
+
+        if(availableProductQuantity < quantity){
+            throw new ProductAvailableQuantityExceededException("Product quantity exceeded. availableProductQuantity : " +  availableProductQuantity + ". requiredQuantity : " +  quantity);
+        }
+
+        CartItem cartItem = cartItemRepository
+                .findByCartAndProduct(cart, product)
+                .orElse(null);
+
+        if (cartItem != null) {
+            cartItem.setQuantity( quantity);
+        } else {
+            CartItem newItem = new CartItem();
+            newItem.setCart(cart);
+            newItem.setProduct(product);
+            newItem.setQuantity(quantity);
+            cart.getCartItems().add(newItem);
+        }
+
+        cartRepository.save(cart);
+    }
+
     public void clearCart(String username) {
         Cart cart = getOrCreateCartByUsername(username);
 //        cart.setCartItems(null);
         cart.getCartItems().clear();
+        cartRepository.save(cart);
+    }
+
+    public void removeProductFromCart(String username, Long productId) {
+        Cart cart = getOrCreateCartByUsername(username);
+        cart.getCartItems().removeIf(cartItem -> cartItem.getProduct().getId().equals(productId));
         cartRepository.save(cart);
     }
 

@@ -49,6 +49,14 @@ public class CartController {
         cartService.clearCart(username);
     }
 
+    @DeleteMapping("/{productId}")
+    public void removeProductFromCart(@PathVariable Long productId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        cartService.removeProductFromCart(username, productId);
+    }
+
     @GetMapping("/")
     public List<CartItemDTO> getCartItems() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -69,4 +77,19 @@ public class CartController {
         return cartItemDTOs;
     }
 
+    @PutMapping("/")
+    public void modifyProductQuantity(@RequestBody CartItemDTO dto){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+
+        Long productId = dto.getProductId();
+        int quantity = dto.getQuantity();
+
+        if(quantity == 0){
+            cartService.removeProductFromCart(username, productId);
+            return;
+        }
+
+        cartService.modifyProductQuantity(username, productId, quantity);
+    }
 }
