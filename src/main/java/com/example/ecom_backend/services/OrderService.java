@@ -3,6 +3,7 @@ package com.example.ecom_backend.services;
 import com.example.ecom_backend.dtos.OrderItemDTO;
 import com.example.ecom_backend.dtos.OrderResponseDTO;
 import com.example.ecom_backend.entities.*;
+import com.example.ecom_backend.exceptions.EmptyCartException;
 import com.example.ecom_backend.repositories.CartRepository;
 import com.example.ecom_backend.repositories.OrderItemRepository;
 import com.example.ecom_backend.repositories.OrderRepository;
@@ -44,6 +45,12 @@ public class OrderService {
          */
 
         Cart cart = cartService.getOrCreateCartByUsername(username);
+
+
+        if (cart.getCartItems().isEmpty()) {
+            throw new EmptyCartException("Cannot place order: cart is empty");
+        }
+
         Order order = createOrder();
 
         AppUser appUser = cart.getAppUser();

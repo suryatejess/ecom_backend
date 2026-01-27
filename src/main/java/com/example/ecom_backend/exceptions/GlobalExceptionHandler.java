@@ -24,4 +24,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(exceptionDTO, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(value = {EmptyCartException.class})
+    public ResponseEntity<Object> handleException(EmptyCartException e) {
+        ExceptionDTO exceptionDTO = new ExceptionDTO( e.getMessage(), HttpStatus.BAD_REQUEST, LocalDateTime.now() );
+        System.out.println("EmptyCartException: " + e.getMessage());
+        return new ResponseEntity<>(exceptionDTO, HttpStatus.BAD_REQUEST);
+    }
+
 }
