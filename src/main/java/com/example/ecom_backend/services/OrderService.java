@@ -12,7 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
+//import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +78,8 @@ public class OrderService {
         order.setOrderStatus(OrderStatus.PROCESSING);
         order.setAddress(orderAddress);
         order.setReceiverName(receiverName);
-        order.setOrderPlacedDate(new Date(System.currentTimeMillis()));
+        // order.setOrderPlacedDate(new Date(System.currentTimeMillis()));
+        order.setOrderPlacedDate(Instant.now());
         order.setAppUser(appUser);
 
 

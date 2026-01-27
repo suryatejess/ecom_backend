@@ -3,6 +3,7 @@ package com.example.ecom_backend.entities;
 import jakarta.persistence.*;
 
 import java.sql.Date;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class Order {
     private String receiverName;
 
     @Column(name = "order_placed_date")
-    private Date orderPlacedDate;
+    private Instant orderPlacedDate;
+//    private Date orderPlacedDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "order_status")
@@ -50,11 +52,19 @@ public class Order {
         this.orderStatus = orderStatus;
     }
 
-    public Date getOrderPlacedDate() {
+//    public Date getOrderPlacedDate() {
+//        return orderPlacedDate;
+//    }
+//
+//    public void setOrderPlacedDate(Date orderPlacedDate) {
+//        this.orderPlacedDate = orderPlacedDate;
+//    }
+
+    public Instant getOrderPlacedDate() {
         return orderPlacedDate;
     }
 
-    public void setOrderPlacedDate(Date orderPlacedDate) {
+    public void setOrderPlacedDate(Instant orderPlacedDate) {
         this.orderPlacedDate = orderPlacedDate;
     }
 

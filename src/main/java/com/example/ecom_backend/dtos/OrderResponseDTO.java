@@ -2,7 +2,7 @@ package com.example.ecom_backend.dtos;
 
 import com.example.ecom_backend.entities.OrderStatus;
 
-import java.sql.Date;
+import java.time.Instant;
 import java.util.List;
 
 public class OrderResponseDTO {
@@ -11,15 +11,26 @@ public class OrderResponseDTO {
     private String receiverName;
     private OrderStatus orderStatus;
 
-    public Date getOrderPlacedDate() {
+//    public Date getOrderPlacedDate() {
+//        return orderPlacedDate;
+//    }
+//
+//    public void setOrderPlacedDate(Date orderPlacedDate) {
+//        this.orderPlacedDate = orderPlacedDate;
+//    }
+
+//    private Date orderPlacedDate;
+
+    private Instant orderPlacedDate;
+
+    public Instant getOrderPlacedDate() {
         return orderPlacedDate;
     }
 
-    public void setOrderPlacedDate(Date orderPlacedDate) {
+    public void setOrderPlacedDate(Instant orderPlacedDate) {
         this.orderPlacedDate = orderPlacedDate;
     }
 
-    private Date orderPlacedDate;
     private List<OrderItemDTO> items;
 
     public Long getId() {
