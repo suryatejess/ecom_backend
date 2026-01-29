@@ -11,6 +11,7 @@ import com.example.ecom_backend.repositories.CartRepository;
 import com.example.ecom_backend.repositories.ProductRepository;
 import com.example.ecom_backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,11 +27,15 @@ public class CartService {
     @Autowired
     private UserRepo userRepo;
 
+    private AppUser getUserOrThrow(String username) {
+        return userRepo.findByUsername(username)
+                .orElseThrow(() ->
+                        new UsernameNotFoundException("User not found: " + username)
+                );
+    }
+
     public Cart getOrCreateCartByUsername(String username) {
-        AppUser user = userRepo.findByUsername(username);
-        if(user==null){
-            throw new RuntimeException("user not found");
-        }
+        AppUser user = getUserOrThrow(username);
 
         return cartRepository
                 .findByAppUser(user)

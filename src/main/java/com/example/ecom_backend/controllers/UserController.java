@@ -3,6 +3,7 @@ package com.example.ecom_backend.controllers;
 import com.example.ecom_backend.dtos.UserLoginDTO;
 import com.example.ecom_backend.dtos.UserSignUpDTO;
 import com.example.ecom_backend.entities.AppUser;
+import com.example.ecom_backend.exceptions.WrongUserCredentials;
 import com.example.ecom_backend.repositories.UserRepo;
 import com.example.ecom_backend.services.UserService;
 import com.example.ecom_backend.utils.JwtUtil;
@@ -12,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*")
@@ -96,9 +99,8 @@ public class UserController {
 
             return new ResponseEntity<>(jwt, HttpStatus.OK);
         }
-        catch (Exception e){
-            log.error("exception occurred while createAuhenticaionToken", e);
-            return new ResponseEntity<>("Incorrect username or password", HttpStatus.BAD_REQUEST);
+        catch (BadCredentialsException | UsernameNotFoundException e){
+            throw new WrongUserCredentials("Incorrect username or password");
         }
     }
 
