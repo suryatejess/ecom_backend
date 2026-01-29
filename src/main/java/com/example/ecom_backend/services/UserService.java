@@ -2,6 +2,7 @@ package com.example.ecom_backend.services;
 
 import com.example.ecom_backend.entities.AppUser;
 import com.example.ecom_backend.entities.RoleType;
+import com.example.ecom_backend.exceptions.UsernameAlreadyExistsException;
 import com.example.ecom_backend.repositories.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,6 +24,11 @@ public class UserService implements UserDetailsService {
     }
 
     public String createUser(String username, String password, String name, String email, String address) {
+
+        if(userRepo.findByUsername(username).isPresent()){
+            throw new UsernameAlreadyExistsException("Username " +  username + " already exists");
+        }
+
         AppUser user = new AppUser();
 
         user.setUsername(username);
@@ -38,6 +44,12 @@ public class UserService implements UserDetailsService {
     }
 
     public String createAdmin(String username, String password, String name, String email, String address) {
+
+        if(userRepo.findByUsername(username).isPresent()){
+            throw new UsernameAlreadyExistsException("Username " +  username + " already exists");
+        }
+
+
         AppUser user = new AppUser();
 
         user.setUsername(username);
