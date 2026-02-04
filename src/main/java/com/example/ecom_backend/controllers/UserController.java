@@ -1,5 +1,6 @@
 package com.example.ecom_backend.controllers;
 
+import com.example.ecom_backend.config.AppConfigurationProperties;
 import com.example.ecom_backend.dtos.UserLoginDTO;
 import com.example.ecom_backend.dtos.UserSignUpDTO;
 import com.example.ecom_backend.entities.AppUser;
@@ -7,10 +8,13 @@ import com.example.ecom_backend.exceptions.WrongUserCredentials;
 import com.example.ecom_backend.repositories.UserRepo;
 import com.example.ecom_backend.services.UserService;
 import com.example.ecom_backend.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -28,6 +32,8 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    AppConfigurationProperties properties;
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
@@ -80,8 +86,27 @@ public class UserController {
         return "admin created";
     }
 
+//    @PostMapping("/login")
+//    public ResponseEntity<String> login(@RequestBody UserLoginDTO dto){
+//        String username = dto.getUsername();
+//        String password = dto.getPassword();
+//
+//        try{
+//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
+//
+//            UserDetails userDetails = userService.loadUserByUsername(username);
+//            String jwt = jwtUtil.generateToken(userDetails.getUsername());
+//
+//            return new ResponseEntity<>(jwt, HttpStatus.OK);
+//        }
+//        catch (BadCredentialsException | UsernameNotFoundException e){
+//            throw new WrongUserCredentials("Incorrect username or password");
+//        }
+//    }
+
+
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody UserLoginDTO dto){
+    public ResponseEntity<Object> login(@RequestBody UserLoginDTO dto, HttpServletResponse response){
         String username = dto.getUsername();
         String password = dto.getPassword();
 
@@ -91,11 +116,31 @@ public class UserController {
             UserDetails userDetails = userService.loadUserByUsername(username);
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-            return new ResponseEntity<>(jwt, HttpStatus.OK);
+            System.out.println("properties.getCookie().toString() :: " + properties.getCookie().toString());
+
+            // make changes from here
+            ResponseCookie cookie = ResponseCookie.from(properties.getCookie().getName(), jwt)
+                    .httpOnly(true)
+                    .secure(false)
+                    .path("/")
+                    .maxAge(properties.getCookie().getExpiresIn()) // this is hard coded here now. make it get it from the application properties next time
+                    .sameSite("Lax")     // or "None" if needed
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            System.out.println("jwt :: " + jwt);
+
+//            return new ResponseEntity<>(jwt, HttpStatus.OK);
+            return ResponseEntity.ok("login successful");
         }
         catch (BadCredentialsException | UsernameNotFoundException e){
             throw new WrongUserCredentials("Incorrect username or password");
         }
+        catch(Exception e){
+            throw new WrongUserCredentials("emo ra babu edho ayyindhi user controller layer lo");
+        }
     }
+
 
 }
