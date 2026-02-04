@@ -23,7 +23,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "*")
+@CrossOrigin(
+        origins = "http://localhost:3000",
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/auth")
 public class UserController {
@@ -86,25 +89,6 @@ public class UserController {
         return "admin created";
     }
 
-//    @PostMapping("/login")
-//    public ResponseEntity<String> login(@RequestBody UserLoginDTO dto){
-//        String username = dto.getUsername();
-//        String password = dto.getPassword();
-//
-//        try{
-//            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-//
-//            UserDetails userDetails = userService.loadUserByUsername(username);
-//            String jwt = jwtUtil.generateToken(userDetails.getUsername());
-//
-//            return new ResponseEntity<>(jwt, HttpStatus.OK);
-//        }
-//        catch (BadCredentialsException | UsernameNotFoundException e){
-//            throw new WrongUserCredentials("Incorrect username or password");
-//        }
-//    }
-
-
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody UserLoginDTO dto, HttpServletResponse response){
         String username = dto.getUsername();
@@ -116,22 +100,16 @@ public class UserController {
             UserDetails userDetails = userService.loadUserByUsername(username);
             String jwt = jwtUtil.generateToken(userDetails.getUsername());
 
-            System.out.println("properties.getCookie().toString() :: " + properties.getCookie().toString());
-
-            // make changes from here
             ResponseCookie cookie = ResponseCookie.from(properties.getCookie().getName(), jwt)
                     .httpOnly(true)
                     .secure(false)
                     .path("/")
-                    .maxAge(properties.getCookie().getExpiresIn()) // this is hard coded here now. make it get it from the application properties next time
-                    .sameSite("Lax")     // or "None" if needed
+                    .maxAge(properties.getCookie().getExpiresIn()) // TODO : this is hard coded here now. make it get it from the application properties next time
+                    .sameSite("Lax")
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-            System.out.println("jwt :: " + jwt);
-
-//            return new ResponseEntity<>(jwt, HttpStatus.OK);
             return ResponseEntity.ok("login successful");
         }
         catch (BadCredentialsException | UsernameNotFoundException e){
