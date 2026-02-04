@@ -19,12 +19,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(
-        origins = "http://localhost:3000",
+        origins = "http://localhost:5173",
         allowCredentials = "true"
 )
 @RestController
@@ -41,6 +42,8 @@ public class UserController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtUtil jwtUtil;
+    @Autowired
+    private UserRepo userRepo;
 
     @GetMapping("/testEverybody")
     public String testEverybody(){
@@ -120,5 +123,21 @@ public class UserController {
         }
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<Object> me(Authentication authentication){
+
+        if(authentication == null || !authentication.isAuthenticated()){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("not authenticated");
+        }
+
+        String username = authentication.getName();
+
+        AppUser user = userRepo.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return ResponseEntity.ok(user);
+    }
+
+    // TODO : write a logout controller that clears the cookies and then returns the Http request
 
 }
