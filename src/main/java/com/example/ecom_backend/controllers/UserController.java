@@ -53,12 +53,6 @@ public class UserController {
 
         AppUser appUser = new AppUser();
 
-//        appUser.setName(dto.getName());
-//        appUser.setPassword(dto.getPassword());
-//        appUser.setAddress(dto.getAddress());
-//        appUser.setEmail(dto.getEmail());
-//        appUser.setUsername(dto.getUsername());
-
         userService.createUser(
                 dto.getUsername(),
                 dto.getPassword(),
