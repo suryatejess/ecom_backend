@@ -109,7 +109,7 @@ public class UserController {
                     .httpOnly(true)
                     .secure(false)
                     .path("/")
-                    .maxAge(properties.getCookie().getExpiresIn()) // TODO : this is hard coded here now. make it get it from the application properties next time
+                    .maxAge(properties.getCookie().getExpiresIn()) 
                     .sameSite("Lax")
                     .build();
 
