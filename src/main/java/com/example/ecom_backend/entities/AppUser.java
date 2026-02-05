@@ -19,7 +19,7 @@ public class AppUser implements UserDetails{
     @Column(name = "name")
     private String name;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String username;
 
     private String password;
@@ -113,5 +113,4 @@ public class AppUser implements UserDetails{
     public void setId(Long id) {
         this.id = id;
     }
-
 }

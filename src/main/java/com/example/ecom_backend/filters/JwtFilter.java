@@ -1,5 +1,6 @@
 package com.example.ecom_backend.filters;
 
+import com.example.ecom_backend.services.UserService;
 import com.example.ecom_backend.utils.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -19,14 +20,14 @@ import java.io.IOException;
 @Component
 public class JwtFilter extends OncePerRequestFilter{
     @Autowired
-    private UserDetailsService userDetailsService;
+    private UserService userService;
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
-        String username = null;
+        Long userId = null;
         String jwt = null;
 
         if (request.getCookies() != null) {
@@ -39,12 +40,12 @@ public class JwtFilter extends OncePerRequestFilter{
         }
 
         if (jwt != null) {
-            username = jwtUtil.extractUsername(jwt);
+            userId = jwtUtil.extractUserId(jwt);
         }
 
         UserDetails userDetails = null;
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            userDetails = userDetailsService.loadUserByUsername(username);
+        if (userId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            userDetails = userService.loadByUserId(userId);
 
             if (jwtUtil.validateToken(jwt)) {
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

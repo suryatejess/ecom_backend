@@ -49,7 +49,6 @@ public class UserService implements UserDetailsService {
             throw new UsernameAlreadyExistsException("Username " +  username + " already exists");
         }
 
-
         AppUser user = new AppUser();
 
         user.setUsername(username);
@@ -62,5 +61,10 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
 
         return "user successfully created";
+    }
+
+    public AppUser loadByUserId(Long id){
+        return userRepo.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 }

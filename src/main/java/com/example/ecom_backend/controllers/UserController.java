@@ -101,7 +101,9 @@ public class UserController {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 
             UserDetails userDetails = userService.loadUserByUsername(username);
-            String jwt = jwtUtil.generateToken(userDetails.getUsername());
+            AppUser appUser = (AppUser) userDetails;
+
+            String jwt = jwtUtil.generateToken(appUser);
 
             ResponseCookie cookie = ResponseCookie.from(properties.getCookie().getName(), jwt)
                     .httpOnly(true)
@@ -130,10 +132,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("not authenticated");
         }
 
-        String username = authentication.getName();
+        Long userId = Long.parseLong(authentication.getName());
 
-        AppUser user = userRepo.findByUsername(username)
+        AppUser user = userRepo.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
 
         return ResponseEntity.ok(user);
     }

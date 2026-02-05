@@ -1,5 +1,7 @@
 package com.example.ecom_backend.utils;
 
+import com.example.ecom_backend.entities.AppUser;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -18,9 +20,9 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
     }
 
-    public String extractUsername(String token) {
+    public Long extractUserId(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.getSubject();
+        return Long.parseLong(claims.getSubject());
     }
 
     public Date extractExpiration(String token) {
@@ -39,9 +41,14 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateToken(String username) {
+    public String generateToken(AppUser appUser) {
         Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, username);
+
+        claims.put("email", appUser.getEmail());
+        claims.put("name", appUser.getName());
+        claims.put("roleType", appUser.getRoleType());
+
+        return createToken(claims, String.valueOf(appUser.getId()));
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -57,7 +64,13 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token) {
-        return !isTokenExpired(token);
+        try{
+            extractAllClaims(token);
+            return !isTokenExpired(token);
+        }
+        catch(Exception e){
+            return false;
+        }
     }
 
 }
