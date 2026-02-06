@@ -33,6 +33,29 @@ public class AppUser implements UserDetails{
     @Column(name = "address")
     private String address;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider")
+    private Provider provider;
+
+    @Column(name = "provider_user_id")
+    private String providerUserId;
+
+    public String getProviderUserId() {
+        return providerUserId;
+    }
+
+    public void setProviderUserId(String providerUserId) {
+        this.providerUserId = providerUserId;
+    }
+
+    public Provider getProvider() {
+        return provider;
+    }
+
+    public void setProvider(Provider provider) {
+        this.provider = provider;
+    }
+
     public String getAddress() {
         return address;
     }

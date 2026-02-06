@@ -1,6 +1,7 @@
 package com.example.ecom_backend.controllers;
 
 import com.example.ecom_backend.dtos.CartItemDTO;
+import com.example.ecom_backend.entities.AppUser;
 import com.example.ecom_backend.entities.CartItem;
 import com.example.ecom_backend.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,6 @@ public class CartController {
 
     @PostMapping("/")
     public void addToCart(@RequestBody CartItemDTO dto) {
-
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
 

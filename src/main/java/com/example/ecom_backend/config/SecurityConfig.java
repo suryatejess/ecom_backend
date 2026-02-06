@@ -27,6 +27,9 @@ public class SecurityConfig {
     @Autowired
     JwtFilter jwtFilter;
 
+    @Autowired
+    private OAuth2SuccessHandler oAuth2SuccessHandler;
+
     @Bean
     public PasswordEncoder passwordEncoder () {
         return new BCryptPasswordEncoder();
@@ -50,7 +53,12 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/testOnlyUser").hasRole("USER")
                                 .requestMatchers("/auth/testOnlyAdmin").hasRole("ADMIN")
                                 .anyRequest().permitAll()
-                ).formLogin(Customizer.withDefaults());
+                )
+                .oauth2Login(
+                        oauth -> oauth
+                                .successHandler(oAuth2SuccessHandler)
+                )
+                .formLogin(Customizer.withDefaults());
 
         httpSecurity.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 

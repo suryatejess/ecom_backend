@@ -109,7 +109,7 @@ public class UserController {
                     .httpOnly(true)
                     .secure(false)
                     .path("/")
-                    .maxAge(properties.getCookie().getExpiresIn()) 
+                    .maxAge(properties.getCookie().getExpiresIn())
                     .sameSite("Lax")
                     .build();
 
@@ -131,12 +131,7 @@ public class UserController {
         if(authentication == null || !authentication.isAuthenticated()){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("not authenticated");
         }
-
-        Long userId = Long.parseLong(authentication.getName());
-
-        AppUser user = userRepo.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
+        AppUser user = (AppUser) authentication.getPrincipal();
 
         return ResponseEntity.ok(user);
     }
