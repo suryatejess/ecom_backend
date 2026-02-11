@@ -136,6 +136,20 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
-    // TODO : write a logout controller that clears the cookies and then returns the Http request
+    @PostMapping("/logout")
+    public ResponseEntity<Object> logout(HttpServletResponse response){
+
+        ResponseCookie cookie = ResponseCookie.from(properties.getCookie().getName())
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok("logout successful");
+    }
 
 }

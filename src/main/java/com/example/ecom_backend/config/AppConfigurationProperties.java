@@ -15,6 +15,22 @@ public class AppConfigurationProperties {
     public static class JwtConfiguration {
         private String secret;
         private int expiresIn;
+
+        public String getSecret() {
+            return secret;
+        }
+
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+
+        public int getExpiresIn() {
+            return expiresIn;
+        }
+
+        public void setExpiresIn(int expiresIn) {
+            this.expiresIn = expiresIn;
+        }
     }
 
     public static class CookieConfiguration {

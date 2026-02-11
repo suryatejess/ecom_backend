@@ -1,6 +1,8 @@
 package com.example.ecom_backend.utils;
 
+import com.example.ecom_backend.config.AppConfigurationProperties;
 import com.example.ecom_backend.entities.AppUser;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Claims;
@@ -14,7 +16,16 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private String SECRET_KEY = "TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V";
+    public JwtUtil(AppConfigurationProperties properties) {
+        this.properties = properties;
+        SECRET_KEY = properties.getJwt().getSecret();
+    }
+
+    @Autowired
+    AppConfigurationProperties properties;
+
+    private String SECRET_KEY = "";
+//    private String SECRET_KEY = "TaK+HaV^uvCHEFsEVfypW#7g9^k*Z8$V";
 
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes());
